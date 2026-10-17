@@ -21,3 +21,22 @@ BO_ 816 Center_Stack_1: 8 XXX
 
 BO_ 650 Center_Stack_2: 8 XXX
  SG_ LKAS_Button : 57|1@1+ (1,0) [0|0] "" XXX
+
+BO_ 324 TCM_1: 8 XXX
+ SG_ ACTUAL_GEAR : 11|4@0+ (1,0) [0|15] "" XXX
+ SG_ DESIRED_GEAR : 15|4@0+ (1,0) [0|15] "" XXX
+ SG_ TC_LOCKED : 17|1@1+ (1,0) [0|1] "" XXX
+ SG_ OUTPUT_SPEED : 31|16@0+ (1,0) [0|65534] "rpm" XXX
+ SG_ INPUT_SPEED : 47|16@0+ (1,0) [0|65534] "rpm" XXX
+
+BO_ 332 ESP_4: 8 XXX
+ SG_ Acceleration : 32|8@1+ (0.08,-10.24) [-10.24|10.08] "m/s2" XXX
+
+CM_ BO_ 324 "Transmission (68RFE six-speed automatic). Same layout as the Ram 1500 message TCM_1; called TRANS_SPEED in the community developer realfast's 2023 Ram HD work. Verified on nine drives of a 2022 Ram 2500 (edfrahm/SP-RamHD-TICI-Port#5).";
+CM_ SG_ 324 ACTUAL_GEAR "Gear in use. Codes measured on a 68RFE: 1 = 1st (ratio 3.23), 2 = 2nd (1.84), 9 = 3rd (1.41), 3 = 4th (1.00), 4 = 5th (0.82), 5 = 6th (0.63); 0 and 11 when stopped, in park or reverse.";
+CM_ SG_ 324 DESIRED_GEAR "Gear the transmission is shifting to, same codes as ACTUAL_GEAR; differs from ACTUAL_GEAR just before a shift.";
+CM_ SG_ 324 TC_LOCKED "1 = torque converter (the fluid coupling between engine and gearbox) locked: engine speed equals INPUT_SPEED.";
+CM_ SG_ 324 OUTPUT_SPEED "Transmission output shaft speed; proportional to wheel speed (axle ratio 3.73 on the verified truck).";
+CM_ SG_ 324 INPUT_SPEED "Transmission input (turbine) speed.";
+CM_ BO_ 332 "Stability control sensor. Same layout as the Ram 1500 message ESP_4. Verified on nine drives of a 2022 Ram 2500 (edfrahm/SP-RamHD-TICI-Port#5). Yaw_Rate (7|16@0) is not added: it failed one drive's cross-check.";
+CM_ SG_ 332 Acceleration "Fore-and-aft acceleration as the sensor feels it, which includes the pull of gravity on a slope: on flat road it matches the acceleration from wheel speed.";
