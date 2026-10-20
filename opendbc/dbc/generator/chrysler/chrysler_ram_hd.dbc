@@ -40,3 +40,5 @@ CM_ SG_ 324 OUTPUT_SPEED "Transmission output shaft speed; proportional to wheel
 CM_ SG_ 324 INPUT_SPEED "Transmission input (turbine) speed.";
 CM_ BO_ 332 "Stability control sensor. Same layout as the Ram 1500 message ESP_4. Verified on nine drives of a 2022 Ram 2500 (edfrahm/SP-RamHD-TICI-Port#5). Yaw_Rate (7|16@0) is not added: it failed one drive's cross-check.";
 CM_ SG_ 332 Acceleration "Fore-and-aft acceleration as the sensor feels it, which includes the pull of gravity on a slope: on flat road it matches the acceleration from wheel speed.";
+CM_ SG_ 501 LEAD_DISTANCE "Distance in meters to the car the factory cruise control follows, as the windshield unit's radar measures it; 254 = no car. Set while the factory cruise control is engaged. Verified against the camera's distance on eleven drives of a 2022 Ram 2500 (correlation 0.90-0.95).";
+CM_ SG_ 625 LEAD_SPEED_KPH "Speed in km/h of the car the factory cruise control follows, capped at the set speed (equals the set speed with no car, 0 with cruise off). Verified on eleven drives of a 2022 Ram 2500.";
