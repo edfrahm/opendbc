@@ -31,14 +31,19 @@ chrysler_to_ram = {
   },
 }
 
-# Signals whose shared definition is wrong for one output: (source address, shared signal name) -> replacement line.
+# Signals whose shared definition is wrong for one output: (source address, shared signal name) -> replacement line,
+# or an empty line to leave the signal out.
 # Ram HD, verified on a 2022 Ram 2500's recorded drives (edfrahm/SP-RamHD-TICI-Port#5): the windshield unit's own
 # measurement of the car its cruise control follows. Byte 7 of DAS_4 is that car's distance in meters (254 = no car),
-# not a speed; byte 3 of DAS_5 is that car's speed, capped at the set speed, not the set speed.
+# not a speed; byte 3 of DAS_5 is that car's speed, capped at the set speed, not the set speed. DAS_5 has no counter
+# and no checksum on this truck: byte 7 is 0xFF and the counter bits are 0 in every frame of twelve drives (965,000
+# frames, edfrahm/SP-RamHD-TICI-Port#28), so the shared counter and checksum would reject every frame.
 signal_overrides = {
   "_stellantis_common_ram_hd_generated.dbc": {
     (501, "SPEED_DIGITAL"): ' SG_ LEAD_DISTANCE : 63|8@0+ (1,0) [0|254] "m" XXX\n',
     (625, "SET_SPEED_KPH"): ' SG_ LEAD_SPEED_KPH : 24|8@1+ (1,0) [0|250] "km/h" XXX\n',
+    (625, "COUNTER"): '',
+    (625, "CHECKSUM"): '',
   },
 }
 

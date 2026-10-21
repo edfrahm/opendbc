@@ -10,6 +10,7 @@ from enum import StrEnum
 
 from opendbc.car import Bus, structs
 from opendbc.can.parser import CANParser
+from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.chrysler.values import RAM_HD
 from opendbc.sunnypilot.car.chrysler.values_ext import BUTTONS
 
@@ -38,3 +39,12 @@ class CarStateExt:
 
     if self.CP.carFingerprint in RAM_HD:
       ret.steeringAngleDeg = cp.vl["STEERING"]["STEERING_ANGLE"]
+
+      # The windshield unit's own car (edfrahm/SP-RamHD-TICI-Port#6, #28), read only: DAS_4 LEAD_DISTANCE in meters
+      # (254 = no car) and DAS_5 LEAD_SPEED_KPH (capped at the set speed). Both are filled in only while the factory
+      # cruise control is engaged.
+      cp_cam = can_parsers[Bus.cam]
+      lead_distance = cp_cam.vl["DAS_4"]["LEAD_DISTANCE"]
+      ret_sp.factoryLead.present = bool(ret.cruiseState.enabled and lead_distance < 254)
+      ret_sp.factoryLead.dRel = float(lead_distance)
+      ret_sp.factoryLead.vLead = float(cp_cam.vl["DAS_5"]["LEAD_SPEED_KPH"] * CV.KPH_TO_MS)

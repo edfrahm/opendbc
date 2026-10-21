@@ -1,6 +1,6 @@
 from opendbc.can import CANDefine, CANParser
 from opendbc.car import Bus, create_button_events, structs
-from opendbc.car.chrysler.values import CUSW_CARS, DBC, STEER_THRESHOLD, RAM_CARS
+from opendbc.car.chrysler.values import CUSW_CARS, DBC, STEER_THRESHOLD, RAM_CARS, RAM_HD
 from opendbc.car.common.conversions import Conversions as CV
 from opendbc.car.interfaces import CarStateBase
 
@@ -164,7 +164,9 @@ class CarState(CarStateBase, MadsCarState, CarStateExt):
 
   @staticmethod
   def get_can_parsers(CP, CP_SP):
+    # Ram HD: the windshield unit's DAS_5 is read for its car-ahead speed only, so it is never required (no timeout)
+    cam_messages = [("DAS_5", float('nan'))] if CP.carFingerprint in RAM_HD else []
     return {
       Bus.pt: CANParser(DBC[CP.carFingerprint][Bus.pt], [], 0),
-      Bus.cam: CANParser(DBC[CP.carFingerprint][Bus.pt], [], 2),
+      Bus.cam: CANParser(DBC[CP.carFingerprint][Bus.pt], cam_messages, 2),
     }

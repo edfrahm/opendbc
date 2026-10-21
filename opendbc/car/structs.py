@@ -166,3 +166,11 @@ class CarControlSP:
 @auto_dataclass
 class CarStateSP:
   speedLimit: float = auto_field()
+  factoryLead: 'CarStateSP.FactoryLead' = field(default_factory=lambda: CarStateSP.FactoryLead())
+
+  @auto_dataclass
+  class FactoryLead:
+    # The car the factory cruise control follows, as the car's own radar or camera unit reports it. Read only.
+    present: bool = auto_field()  # a car is reported (only while the factory cruise control is engaged)
+    dRel: float = auto_field()  # m, distance to it
+    vLead: float = auto_field()  # m/s, its speed as reported (on the Ram HD capped at the set speed)
